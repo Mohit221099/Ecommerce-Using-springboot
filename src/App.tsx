@@ -10,7 +10,11 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import AdminProductsPage from './pages/AdminProductsPage';
 import AdminOrdersPage from './pages/AdminOrdersPage';
-
+import Orders from './pages/Orders';
+import About from './components/about';
+import Profile from './components/profile';
+import AdminPanel from './pages/Admin';
+import ContactPage from './components/contact';
 function App() {
   return (
     <div className="flex flex-col min-h-screen">
@@ -26,6 +30,12 @@ function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/admin/products" element={<AdminProductsPage />} />
           <Route path="/admin/orders" element={<AdminOrdersPage />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/admin" element={<AdminPanel />} />
+          <Route path="/contact" element={<ContactPage />} />
+
         </Routes>
       </main>
       <Footer />

@@ -13,7 +13,7 @@ const mockOrders: Order[] = [
     items: [
       {
         product: {
-          id: 1,
+          id: '1',
           name: 'Wireless Headphones',
           description: 'High-quality wireless headphones with noise cancellation.',
           price: 99.99,

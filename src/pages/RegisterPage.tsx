@@ -27,6 +27,7 @@ const RegisterPage: React.FC = () => {
     
     // Reset errors
     setError(null);
+    setSuccess(null);
     
     // Validate inputs
     if (!username.trim() || !email.trim() || !password.trim() || !confirmPassword.trim()) {
@@ -52,14 +53,25 @@ const RegisterPage: React.FC = () => {
     setLoading(true);
     
     try {
-      // For demonstration purposes
-      // In a real app, this would call the backend API
+
+      const response = await fetch('http://localhost:8080/api/auth/register', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, email, password })
+        });
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Simulate successful registration
-      setSuccess('Registration successful! Redirecting to login...');
+      if (!response.ok) {
+        const message = await response.text();
+        throw new Error(message || 'Registration failed');
+      }
       
-      // Redirect after a brief delay
+      const data = await response.text(); // your backend returns plain text "User registered successfully"
+      
+      setSuccess(data || 'Registration successful! Redirecting to login...');
+      
       setTimeout(() => {
         navigate('/login');
       }, 2000);

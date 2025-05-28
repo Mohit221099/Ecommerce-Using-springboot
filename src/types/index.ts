@@ -1,5 +1,5 @@
 export interface Product {
-  id: number;
+  id: string;
   name: string;
   description: string;
   price: number;
@@ -20,13 +20,34 @@ export interface User {
   role: 'USER' | 'ADMIN';
 }
 
+export interface Product {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+  imageUrl: string;
+  category: string;
+  stock: number;
+}
+
 export interface Order {
   id: number;
   userId: number;
-  items: CartItem[];
-  total: number;
-  status: 'PENDING' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED';
   createdAt: string;
+  items: Array<{ product: Product; quantity: number }>;
+  total: number;
+  address: {
+    fullName: string;
+    streetAddress: string;
+    city: string;
+    state: string;
+    pincode: string;
+    phone: string;
+  };
+  status: 'PENDING' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED';
+  orderDate: string;
+  estimatedDeliveryDate: string;
+  paymentMethod?: 'UPI' | 'PhonePe' | 'GooglePay' | 'Paytm' | 'COD'; // Added
 }
 
 export interface AuthState {

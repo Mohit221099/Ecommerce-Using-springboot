@@ -5,10 +5,11 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 
 const Header: React.FC = () => {
-  const { isAuthenticated, isAdmin, logout } = useAuth();
+  const { isAuthenticated, isAdmin, logout, user } = useAuth();
   const { totalItems } = useCart();
   const [searchQuery, setSearchQuery] = useState('');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,10 +22,17 @@ const Header: React.FC = () => {
     <header className="bg-white shadow-sm sticky top-0 z-10">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          {/* Logo */}
-          <Link to="/" className="text-xl font-bold text-blue-600">
-            SimpleShop
-          </Link>
+          {/* Logo and Welcome Message */}
+          <div className="flex items-center space-x-4">
+            <Link to="/" className="text-xl font-bold text-blue-600">
+              SimpleShop
+            </Link>
+            {isAuthenticated && user?.username && (
+              <span className="text-gray-700 text-sm hidden md:block">
+                Welcome back, {user.username}!
+              </span>
+            )}
+          </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
@@ -65,29 +73,36 @@ const Header: React.FC = () => {
             </Link>
             
             {isAuthenticated ? (
-              <div className="relative group">
-                <button className="p-2 text-gray-700 hover:text-blue-600 transition-colors">
+              <div 
+                className="relative"
+                onMouseEnter={() => setIsProfileOpen(true)}
+                onMouseLeave={() => setIsProfileOpen(false)}
+              >
+                <button className="p-2 text-gray-700 hover:text-blue-600 transition-colors flex items-center space-x-1">
                   <User size={24} />
+                  <span className="text-sm">{user?.username || 'Profile'}</span>
                 </button>
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 hidden group-hover:block">
-                  <Link to="/profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                    My Profile
-                  </Link>
-                  <Link to="/orders" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                    My Orders
-                  </Link>
-                  {isAdmin && (
-                    <Link to="/admin" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-                      Admin Panel
+                {isProfileOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                    <Link to="/profile" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                      My Profile
                     </Link>
-                  )}
-                  <button 
-                    onClick={logout}
-                    className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                  >
-                    Logout
-                  </button>
-                </div>
+                    <Link to="/orders" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                      My Orders
+                    </Link>
+                    {isAdmin && (
+                      <Link to="/admin" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+                        Admin Panel
+                      </Link>
+                    )}
+                    <button 
+                      onClick={logout}
+                      className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <Link to="/login" className="p-2 text-gray-700 hover:text-blue-600 transition-colors">
@@ -108,6 +123,11 @@ const Header: React.FC = () => {
         {/* Mobile menu */}
         {isMenuOpen && (
           <div className="md:hidden mt-4 pb-4">
+            {isAuthenticated && user?.username && (
+              <span className="text-gray-700 text-sm block mb-4">
+                Welcome back, {user.username}!
+              </span>
+            )}
             <form onSubmit={handleSearch} className="relative mb-4">
               <input
                 type="text"
